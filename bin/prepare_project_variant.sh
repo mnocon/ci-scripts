@@ -85,7 +85,7 @@ docker-compose up -d
 # docker-compose exec app sh -c 'chown -R www-data:www-data /var/www'
 
 echo '> Install data'
-docker-compose exec --user www-data app sh -c "php /scripts/wait_for_db.php; php bin/console ezplaform:install clean" #TMP - hardcoded DB version
+docker-compose exec --user www-data app sh -c "php /scripts/wait_for_db.php; php bin/console ezplatform:install clean" #TMP - hardcoded DB version
 
 echo '> Generate GraphQL schema'
 docker-compose exec --user www-data app sh -c "php bin/console ezplatform:graphql:generate-schema"
