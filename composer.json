@@ -9,5 +9,6 @@
         "branch-alias": {
             "dev-master": "1.0.x-dev"
         }
-    }
+    },
+    "bin": ["bin/check_cs.sh", "bin/prepare_project_variant.sh", "bin/update_docker.sh"]
 }
