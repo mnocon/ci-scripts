@@ -1,0 +1,13 @@
+{
+    "name": "mnocon/ci-scripts",
+    "description": "CI scripts for Ibexa DXP",
+    "type": "library",
+    "license": "GPL-2.0-only",
+    "minimum-stability": "stable",
+    "require": {},
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
