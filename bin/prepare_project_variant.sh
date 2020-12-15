@@ -74,9 +74,9 @@ docker-compose -f doc/docker/install-dependencies.yml up --abort-on-container-ex
 echo "> Start docker containers specified by ${COMPOSE_FILE}"
 docker-compose up -d
 
-# for Behat builds to work - TMP comment
-# echo '> Change ownership of files inside docker container'
-# docker-compose exec app sh -c 'chown -R www-data:www-data /var/www'
+# for Behat builds to work
+echo '> Change ownership of files inside docker container'
+docker-compose exec app sh -c 'chown -R www-data:www-data /var/www'
 
 echo '> Install data'
 docker-compose exec --user www-data app sh -c "php /scripts/wait_for_db.php; php bin/console ezplatform:install clean" #TMP - hardcoded DB version
