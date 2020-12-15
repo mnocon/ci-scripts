@@ -2,6 +2,7 @@
 set -e
 
 PROJECT_VARIANT=$1
+COMPOSE_FILE=$2
 
 echo "> Setting up website skeleton"
 # EZPLATFORM_BUILD_DIR=${HOME}/build/ezplatform
@@ -69,13 +70,6 @@ composer require ibexa/${PROJECT_VARIANT} --no-scripts --no-update
 
 echo "> Install DB and dependencies - use Docker for consistent PHP version"
 docker-compose -f doc/docker/install-dependencies.yml up --abort-on-container-exit
-
-if [[ -z "${2}" ]]; then
-    # If not set, read default from .env file
-    COMPOSE_FILE=$(grep "COMPOSE_FILE" ${EZPLATFORM_BUILD_DIR}/.env)
-else
-    COMPOSE_FILE=$2
-fi
 
 echo "> Start docker containers specified by ${COMPOSE_FILE}"
 docker-compose up -d
