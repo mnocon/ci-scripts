@@ -4,9 +4,6 @@ set -e
 PROJECT_VARIANT=$1
 COMPOSE_FILE=$2
 
-echo '> Remove XDebug PHP extension'
-phpenv config-rm xdebug.ini
-
 echo "> Setting up website skeleton"
 EZPLATFORM_BUILD_DIR=${HOME}/build/ezplatform
 # EZPLATFORM_BUILD_DIR=~/Desktop/test
