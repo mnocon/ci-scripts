@@ -5,11 +5,11 @@ PROJECT_VARIANT=$1
 COMPOSE_FILE=$2
 
 echo '> Remove XDebug PHP extension'
-# phpenv config-rm xdebug.ini #TMP
+phpenv config-rm xdebug.ini
 
 echo "> Setting up website skeleton"
-# EZPLATFORM_BUILD_DIR=${HOME}/build/ezplatform #TMP
-EZPLATFORM_BUILD_DIR=~/Desktop/test
+EZPLATFORM_BUILD_DIR=${HOME}/build/ezplatform
+# EZPLATFORM_BUILD_DIR=~/Desktop/test
 # export SYMFONY_ENDPOINT=https://flex.ibexa.co #TMP
 composer create-project ibexa/website-skeleton:^1.0@dev ${EZPLATFORM_BUILD_DIR} --no-scripts --repository=https://webhdx.repo.repman.io #TMP
 
@@ -84,7 +84,7 @@ fi
 echo "> Start docker containers specified by ${COMPOSE_FILE}"
 docker-compose up -d
 
-# for Behat builds to work - TMP
+# for Behat builds to work - TMP comment
 # echo '> Change ownership of files inside docker container'
 # docker-compose exec app sh -c 'chown -R www-data:www-data /var/www'
 
