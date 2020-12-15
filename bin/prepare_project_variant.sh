@@ -2,11 +2,10 @@
 set -e
 
 PROJECT_VARIANT=$1
-COMPOSE_FILE=$2
 
 echo "> Setting up website skeleton"
-EZPLATFORM_BUILD_DIR=${HOME}/build/ezplatform
-# EZPLATFORM_BUILD_DIR=~/Desktop/test
+# EZPLATFORM_BUILD_DIR=${HOME}/build/ezplatform
+EZPLATFORM_BUILD_DIR=~/Desktop/test
 # export SYMFONY_ENDPOINT=https://flex.ibexa.co #TMP
 composer create-project ibexa/website-skeleton:^1.0@dev ${EZPLATFORM_BUILD_DIR} --no-scripts --repository=https://webhdx.repo.repman.io #TMP
 
@@ -75,7 +74,7 @@ if [[ -z "${2}" ]]; then
     # If not set, read default from .env file
     COMPOSE_FILE=$(grep "COMPOSE_FILE" ${EZPLATFORM_BUILD_DIR}/.env)
 else
-    COMPOSE_FILE=$1
+    COMPOSE_FILE=$2
 fi
 
 echo "> Start docker containers specified by ${COMPOSE_FILE}"
