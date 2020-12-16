@@ -71,9 +71,8 @@ composer require ibexa/${PROJECT_VARIANT} --no-scripts --no-update
 echo "> Install DB and dependencies - use Docker for consistent PHP version"
 docker-compose -f doc/docker/install-dependencies.yml up --abort-on-container-exit
 
-echo '> Install data'
-docker-compose exec --user www-data app sh -c "export DATABASE_URL=${DATABASE_PLATFORM}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?serverVersion=${DATABASE_VERSION} ; php /scripts/wait_for_db.php; php bin/console ezplatform:install clean" #TMP 1) hardcoded DB
-
+echo '> Set up database connection'
+echo 'DATABASE_URL=${DATABASE_PLATFORM}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?serverVersion=${DATABASE_VERSION}' >> .env
 
 echo "> Start docker containers specified by ${COMPOSE_FILE}"
 docker-compose up -d
