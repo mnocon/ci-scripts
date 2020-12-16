@@ -23,11 +23,7 @@ echo "- EZPLATFORM_BUILD_DIR=${EZPLATFORM_BUILD_DIR}"
 echo "- DEPENDENCY_PACKAGE_NAME=${DEPENDENCY_PACKAGE_NAME}"
 
 # get dependency branch alias
-BRANCH_ALIAS=`php -r "echo json_decode(file_get_contents('${DEPENDENCY_PACKAGE_DIR}/composer.json'))->extra->{'branch-alias'}->{'dev-tmp_ci_branch'};"`
-if [[ $? -ne 0 || -z "${BRANCH_ALIAS}" ]]; then
-    echo 'Failed to determine branch alias. Add extra.branch-alias.dev-tmp_ci_branch config key to your tested dependency composer.json' >&2
-    exit 3
-fi
+BRANCH_ALIAS=`php -r "echo json_decode(file_get_contents('${DEPENDENCY_PACKAGE_DIR}/composer.json'))->extra->{'branch-alias'}->{'dev-master'};"`
 
 # Link dependency to directory available for docker volume
 echo "> Link ${DEPENDENCY_PACKAGE_DIR} to ${EZPLATFORM_BUILD_DIR}/${DEPENDENCY_PACKAGE_NAME}"
@@ -62,7 +58,7 @@ rm composer.lock # remove lock created for Docker dependency
 echo "> Make composer use tested dependency"
 composer config repositories.localDependency path ./${DEPENDENCY_PACKAGE_NAME}
 
-echo "> Require ${DEPENDENCY_PACKAGE_NAME}:dev-${TMP_TRAVIS_BRANCH} as ${BRANCH_ALIAS}"
+echo "> Require ${DEPENDENCY_PACKAGE_NAME} as ${BRANCH_ALIAS}"
 composer require --no-update "${DEPENDENCY_PACKAGE_NAME}:${BRANCH_ALIAS}"
 
 # Install correct product variant
