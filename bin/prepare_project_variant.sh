@@ -55,6 +55,7 @@ touch .env
 # Install package with Docker Compose files
 composer config repositories.docker vcs https://github.com/mnocon/docker.git #TMP
 composer require --no-update --prefer-dist mnocon/docker:^1.0@dev
+composer require --no-update --prefer-dist ezsystems/behatbundle:^8.0@dev
 composer update mnocon/docker --no-scripts
 composer recipes:install mnocon/docker
 rm composer.lock # remove lock created for Docker dependency
