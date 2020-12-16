@@ -5,8 +5,7 @@ PROJECT_VARIANT=$1
 COMPOSE_FILE=$2
 
 echo "> Setting up website skeleton"
-# EZPLATFORM_BUILD_DIR=${HOME}/build/ezplatform
-EZPLATFORM_BUILD_DIR=~/Desktop/test
+EZPLATFORM_BUILD_DIR=${HOME}/build/ezplatform
 # export SYMFONY_ENDPOINT=https://flex.ibexa.co #TMP
 composer create-project ibexa/website-skeleton:^1.0@dev ${EZPLATFORM_BUILD_DIR} --no-scripts --repository=https://webhdx.repo.repman.io #TMP
 
@@ -72,6 +71,10 @@ composer require ibexa/${PROJECT_VARIANT} --no-scripts --no-update
 echo "> Install DB and dependencies - use Docker for consistent PHP version"
 docker-compose -f doc/docker/install-dependencies.yml up --abort-on-container-exit
 
+echo '> Install data'
+docker-compose exec --user www-data app sh -c "export DATABASE_URL=${DATABASE_PLATFORM}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?serverVersion=${DATABASE_VERSION} ; php /scripts/wait_for_db.php; php bin/console ezplatform:install clean" #TMP 1) hardcoded DB
+
+
 echo "> Start docker containers specified by ${COMPOSE_FILE}"
 docker-compose up -d
 
@@ -80,7 +83,7 @@ echo '> Change ownership of files inside docker container'
 docker-compose exec app sh -c 'chown -R www-data:www-data /var/www'
 
 echo '> Install data'
-docker-compose exec --user www-data app sh -c "export DATABASE_URL=${DATABASE_PLATFORM}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?serverVersion=${DATABASE_VERSION} ; php /scripts/wait_for_db.php; php bin/console ezplatform:install clean" #TMP 1) hardcoded DB
+docker-compose exec --user www-data app sh -c "php /scripts/wait_for_db.php; php bin/console ezplatform:install clean" #TMP 1) hardcoded DB
 
 echo '> Generate GraphQL schema'
 docker-compose exec --user www-data app sh -c "php bin/console ezplatform:graphql:generate-schema"
