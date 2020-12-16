@@ -6,7 +6,6 @@ COMPOSE_FILE=$2
 
 echo "> Setting up website skeleton"
 EZPLATFORM_BUILD_DIR=${HOME}/build/ezplatform
-# export SYMFONY_ENDPOINT=https://flex.ibexa.co #TMP
 composer create-project ibexa/website-skeleton:^1.0@dev ${EZPLATFORM_BUILD_DIR} --no-scripts --repository=https://webhdx.repo.repman.io #TMP
 
 DEPENDENCY_PACKAGE_DIR=$(pwd)
@@ -30,30 +29,21 @@ echo "> Link ${DEPENDENCY_PACKAGE_DIR} to ${EZPLATFORM_BUILD_DIR}/${DEPENDENCY_P
 mkdir -p ${EZPLATFORM_BUILD_DIR}/${DEPENDENCY_PACKAGE_NAME}
 ln -s ${DEPENDENCY_PACKAGE_DIR}/* ${EZPLATFORM_BUILD_DIR}/${DEPENDENCY_PACKAGE_NAME}/
 
-# # perform full checkout to allow using as local Composer depenency
-# cd ${EZPLATFORM_BUILD_DIR}/${BASE_PACKAGE_NAME}
-# git fetch --unshallow
-
-# echo "> Create temporary branch in ${DEPENDENCY_PACKAGE_NAME}"
-# # reuse HEAD commit id for better knowledge about what got checked out
-# TMP_TRAVIS_BRANCH=tmp_`git rev-parse --short HEAD`
-# git checkout -b ${TMP_TRAVIS_BRANCH}
-
-# go back to previous directory
-
-# use local checkout path relative to docker volume
+# Go to main project dir
 cd ${EZPLATFORM_BUILD_DIR}
 
-# Make sure .env exists
+# Make sure .env exists - we haven't installed Symfony packages yet
 touch .env
+
+# Install packages required for testing
+composer require --no-update --prefer-dist ezsystems/behatbundle:^8.0@dev #TMP - should be a metapackage for testing libraries?
 
 # Install package with Docker Compose files
 composer config repositories.docker vcs https://github.com/mnocon/docker.git #TMP
 composer require --no-update --prefer-dist mnocon/docker:^1.0@dev
-composer require --no-update --prefer-dist ezsystems/behatbundle:^8.0@dev
 composer update mnocon/docker --no-scripts
 composer recipes:install mnocon/docker
-rm composer.lock # remove lock created for Docker dependency
+rm composer.lock # remove lock created when installing Docker dependency
 
 echo "> Make composer use tested dependency"
 composer config repositories.localDependency path ./${DEPENDENCY_PACKAGE_NAME}
@@ -78,12 +68,12 @@ echo '> Change ownership of files inside docker container'
 docker-compose exec app sh -c 'chown -R www-data:www-data /var/www'
 
 echo '> Install data'
-docker-compose exec --user www-data app sh -c "php /scripts/wait_for_db.php; php bin/console ezplatform:install clean" #TMP 1) hardcoded DB
+docker-compose exec --user www-data app sh -c "php /scripts/wait_for_db.php; php bin/console ezplatform:install clean" #TMP 1) hardcoded install type
 
 echo '> Generate GraphQL schema'
 docker-compose exec --user www-data app sh -c "php bin/console ezplatform:graphql:generate-schema"
+
+echo '> Clear cache & generate assets'
 docker-compose exec --user www-data app sh -c "composer run post-install-cmd"
 
 echo '> Done, ready to run tests'
-
-cd "$HOME/build/ezplatform"; 
