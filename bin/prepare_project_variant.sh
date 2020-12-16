@@ -75,15 +75,12 @@ docker-compose -f doc/docker/install-dependencies.yml up --abort-on-container-ex
 echo "> Start docker containers specified by ${COMPOSE_FILE}"
 docker-compose up -d
 
-# Export DATABASE_URL because doctrine .env entry has higher priority than our own
-docker-compose exec app sh -c 'export DATABASE_URL=${DATABASE_PLATFORM}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?serverVersion=${DATABASE_VERSION}'
-
 # for Behat builds to work
 echo '> Change ownership of files inside docker container'
 docker-compose exec app sh -c 'chown -R www-data:www-data /var/www'
 
 echo '> Install data'
-docker-compose exec --user www-data app sh -c "php /scripts/wait_for_db.php; php bin/console ezplatform:install clean" #TMP 1) hardcoded DB
+docker-compose exec --user www-data app sh -c "export DATABASE_URL=${DATABASE_PLATFORM}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?serverVersion=${DATABASE_VERSION} ; php /scripts/wait_for_db.php; php bin/console ezplatform:install clean" #TMP 1) hardcoded DB
 
 echo '> Generate GraphQL schema'
 docker-compose exec --user www-data app sh -c "php bin/console ezplatform:graphql:generate-schema"
