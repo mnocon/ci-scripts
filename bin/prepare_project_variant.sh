@@ -45,7 +45,7 @@ composer recipes:install mnocon/docker
 rm composer.lock # remove lock created when installing Docker dependency
 
 echo "> Make composer use tested dependency"
-composer config repositories.localDependency '{"type": "path", "url": "./${DEPENDENCY_PACKAGE_NAME}", "canonical": true, "only":["${DEPENDENCY_PACKAGE_NAME}"]}'
+composer config repositories.localDependency path ./${DEPENDENCY_PACKAGE_NAME}
 
 # Install correct product variant
 composer require ibexa/${PROJECT_VARIANT}:${PROJECT_VERSION} --no-scripts --no-update
