@@ -37,9 +37,6 @@ cd ${EZPLATFORM_BUILD_DIR}
 # Make sure .env exists - we haven't installed Symfony packages yet
 touch .env
 
-# Install packages required for testing
-composer require --no-update --prefer-dist ezsystems/behatbundle:"dev-overwrite-mink-config as 8.3.x-dev" #TMP - should there be a metapackage for testing libraries?
-
 # Install package with Docker Compose files
 composer config repositories.docker vcs https://github.com/mnocon/docker.git #TMP
 composer require --no-update --prefer-dist mnocon/docker:^1.0@dev
@@ -52,6 +49,9 @@ composer config repositories.localDependency path ./${DEPENDENCY_PACKAGE_NAME}
 
 # Install correct product variant
 composer require ibexa/${PROJECT_VARIANT}:${PROJECT_VERSION} --no-scripts --no-update
+
+# Install packages required for testing
+composer require --no-update --prefer-dist ezsystems/behatbundle:"dev-overwrite-mink-config as 8.3.x-dev" #TMP - should there be a metapackage for testing libraries?
 
 echo "> Install DB and dependencies - use Docker for consistent PHP version"
 docker-compose -f doc/docker/install-dependencies.yml up --abort-on-container-exit
