@@ -2,12 +2,13 @@
 set -e
 
 PROJECT_VARIANT=$1
-COMPOSE_FILE=$2
+PROJECT_VERSION=$2
+COMPOSE_FILE=$3
 
 echo "> Setting up website skeleton"
 EZPLATFORM_BUILD_DIR=${HOME}/build/ezplatform
 # composer create-project ibexa/website-skeleton:^1.0@dev ${EZPLATFORM_BUILD_DIR} --no-scripts --repository=https://webhdx.repo.repman.io #TMP
-composer create-project ibexa/dev-website-skeleton:^3.3@dev ${EZPLATFORM_BUILD_DIR} --repository='{"type": "vcs", "url": "https://gitlab.com/webhdx/dev-website-skeleton.git"}'
+composer create-project ibexa/dev-website-skeleton:dev-devel ${EZPLATFORM_BUILD_DIR} --repository='{"type": "vcs", "url": "https://gitlab.com/webhdx/dev-website-skeleton.git"}'
 
 DEPENDENCY_PACKAGE_DIR=$(pwd)
 
@@ -53,7 +54,7 @@ echo "> Require ${DEPENDENCY_PACKAGE_NAME} as ${BRANCH_ALIAS}"
 composer require --no-update "${DEPENDENCY_PACKAGE_NAME}:${BRANCH_ALIAS}"
 
 # Install correct product variant
-composer require ibexa/${PROJECT_VARIANT} --no-scripts --no-update
+composer require ibexa/${PROJECT_VARIANT}:${PROJECT_VERSION} --no-scripts --no-update
 
 echo "> Install DB and dependencies - use Docker for consistent PHP version"
 docker-compose -f doc/docker/install-dependencies.yml up --abort-on-container-exit
