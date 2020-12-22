@@ -26,10 +26,10 @@ echo "- DEPENDENCY_PACKAGE_NAME=${DEPENDENCY_PACKAGE_NAME}"
 # get dependency branch alias
 BRANCH_ALIAS=`php -r "echo json_decode(file_get_contents('${DEPENDENCY_PACKAGE_DIR}/composer.json'))->extra->{'branch-alias'}->{'dev-master'};"`
 
-# Link dependency to directory available for docker volume
+# Copy dependency to directory available for docker volume
 echo "> Link ${DEPENDENCY_PACKAGE_DIR} to ${EZPLATFORM_BUILD_DIR}/${DEPENDENCY_PACKAGE_NAME}"
 mkdir -p ${EZPLATFORM_BUILD_DIR}/${DEPENDENCY_PACKAGE_NAME}
-ln -s ${DEPENDENCY_PACKAGE_DIR}/* ${EZPLATFORM_BUILD_DIR}/${DEPENDENCY_PACKAGE_NAME}/
+cp -R ${DEPENDENCY_PACKAGE_DIR}/* ${EZPLATFORM_BUILD_DIR}/${DEPENDENCY_PACKAGE_NAME}/
 
 # Go to main project dir
 cd ${EZPLATFORM_BUILD_DIR}
