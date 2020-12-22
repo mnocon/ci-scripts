@@ -50,9 +50,6 @@ rm composer.lock # remove lock created when installing Docker dependency
 echo "> Make composer use tested dependency"
 composer config repositories.localDependency path ./${DEPENDENCY_PACKAGE_NAME}
 
-echo "> Require ${DEPENDENCY_PACKAGE_NAME} as ${BRANCH_ALIAS}"
-composer require --no-update "${DEPENDENCY_PACKAGE_NAME}:${BRANCH_ALIAS}"
-
 # Install correct product variant
 composer require ibexa/${PROJECT_VARIANT}:${PROJECT_VERSION} --no-scripts --no-update
 
