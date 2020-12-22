@@ -6,7 +6,8 @@ COMPOSE_FILE=$2
 
 echo "> Setting up website skeleton"
 EZPLATFORM_BUILD_DIR=${HOME}/build/ezplatform
-composer create-project ibexa/website-skeleton:^1.0@dev ${EZPLATFORM_BUILD_DIR} --no-scripts --repository=https://webhdx.repo.repman.io #TMP
+# composer create-project ibexa/website-skeleton:^1.0@dev ${EZPLATFORM_BUILD_DIR} --no-scripts --repository=https://webhdx.repo.repman.io #TMP
+composer create-project ibexa/dev-website-skeleton:^3.3@dev ${EZPLATFORM_BUILD_DIR} --repository='{"type": "vcs", "url": "https://gitlab.com/webhdx/dev-website-skeleton.git"}'
 
 DEPENDENCY_PACKAGE_DIR=$(pwd)
 
