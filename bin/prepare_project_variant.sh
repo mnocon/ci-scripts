@@ -37,7 +37,7 @@ cd ${EZPLATFORM_BUILD_DIR}
 touch .env
 
 # Install packages required for testing
-composer require --no-update --prefer-dist ezsystems/behatbundle:^8.0@dev #TMP - should be a metapackage for testing libraries?
+composer require --no-update --prefer-dist ezsystems/behatbundle:"dev-overwrite-mink-config as 8.3.x-dev" #TMP - should there be a metapackage for testing libraries?
 
 # Install package with Docker Compose files
 composer config repositories.docker vcs https://github.com/mnocon/docker.git #TMP
